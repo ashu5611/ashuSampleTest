@@ -6,8 +6,15 @@ RUN gradle build --no-daemon
 
 FROM openjdk:17-oracle
 EXPOSE 8080
+
+USER root
+RUN mkdir -p /app
 RUN groupadd mygroup && useradd  myuser -g mygroup
+RUN chown myuser /app
+
+
 USER myuser:mygroup
-ARG JAR_FILE=build/*.jar
+
+
 COPY --from=build /home/gradle/src/build/libs/*.jar /app/ashutestapi.jar
 ENTRYPOINT ["java","-jar","/app/ashutestapi.jar"]
