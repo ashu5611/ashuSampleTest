@@ -16,5 +16,5 @@ RUN chown myuser /app
 USER myuser:mygroup
 
 
-COPY --from=build /home/gradle/src/build/libs/*.jar /app
+COPY --from=build /home/gradle/src/build/libs/*.jar /app/
 ENTRYPOINT ["java","-jar","/app/ashutest-0.1.0.jar"]
