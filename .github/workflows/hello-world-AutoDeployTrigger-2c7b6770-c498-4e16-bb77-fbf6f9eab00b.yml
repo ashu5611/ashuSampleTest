@@ -6,10 +6,6 @@ on:
   push:
     branches: 
       [ master ]
-    paths:
-    - 'src/**'
-    - '.github/workflows/hello-world-AutoDeployTrigger-2c7b6770-c498-4e16-bb77-fbf6f9eab00b.yml'
-
   # Allow manual trigger 
   workflow_dispatch:
       
@@ -24,19 +20,23 @@ jobs:
       - name: Azure Login
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.HELLOWORLD_AZURE_CREDENTIALS }}
+          client-id: ${{ secrets.CLIENT_ID }}
+          tenant-id: ${{ secrets.TENANT_ID }}
+          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
+          enable-AzPSSession: true
+          allow-no-subscriptions: true
 
-      - name: Build and push container image to registry
-        uses: azure/container-apps-deploy-action@v2
-        with:
-          appSourcePath: ${{ github.workspace }}/src 
-          registryUrl: ca57e6482f00acr.azurecr.io
-          registryUsername: ${{ secrets.HELLOWORLD_REGISTRY_USERNAME }}
-          registryPassword: ${{ secrets.HELLOWORLD_REGISTRY_PASSWORD }}
-          containerAppName: hello-world
-          resourceGroup: album-containerapps
-          imageToBuild: ca57e6482f00acr.azurecr.io/hello-world:${{ github.sha }}
-          
+      #- name: Build and push container image to registry
+      #  uses: azure/container-apps-deploy-action@v2
+      #  with:
+      #    appSourcePath: ${{ github.workspace }}/src
+      #    registryUrl: ca57e6482f00acr.azurecr.io
+      #    registryUsername: ${{ secrets.HELLOWORLD_REGISTRY_USERNAME }}
+      #    registryPassword: ${{ secrets.HELLOWORLD_REGISTRY_PASSWORD }}
+      #    containerAppName: hello-world
+      #    resourceGroup: album-containerapps
+      #    imageToBuild: ca57e6482f00acr.azurecr.io/hello-world:${{ github.sha }}
+      #
             
 
      
