@@ -77,7 +77,7 @@ module containerRegistry 'containerRegistry.bicep' = {
   }
 }
 
-module containerApp 'containerapp.bicep' = if (isContainerImagePresent){
+module containerApp 'containerApp.bicep' = if (isContainerImagePresent){
   name: 'container-app'
   params: {
     tags: tags
