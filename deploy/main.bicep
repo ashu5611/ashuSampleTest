@@ -3,8 +3,14 @@ param appName string = uniqueString(resourceGroup().id)
 param logAnalyticsWorkspaceName string = 'law${appName}'
 param keyVaultName string = 'kv${appName}'
 param lastDeployed string = utcNow('d')
+
+param sqlUsername string = sqlAdminUsername
+@secure()
+param sqlPassword string = sqlAdminPassword
 //this is used as a conditional when deploying the container app
 param isContainerImagePresent bool
+
+param sqlUsername =
 
 //container registry
 param containerRegistryName string = 'acr${appName}'
