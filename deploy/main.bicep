@@ -5,7 +5,7 @@ param keyVaultName string = 'kv${appName}'
 param lastDeployed string = utcNow('d')
 
 //this is used as a conditional when deploying the container app
-param isContainerImagePresent bool
+param isContainerImagePresent bool = false
 
 //container registry
 param containerRegistryName string = 'acr${appName}'
