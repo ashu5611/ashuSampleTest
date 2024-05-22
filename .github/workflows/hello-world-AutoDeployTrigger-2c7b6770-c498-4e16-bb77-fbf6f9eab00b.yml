@@ -32,7 +32,7 @@ jobs:
           subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
           resourceGroupName: ashu-rg
           template: ./deploy/main.bicep
-          parameters: sqlAdminUsername=${{ secrets.SQL_USERNAME }} sqlAdmin=${{ secrets.SQL_PASSWORD }}
+        #  parameters: sqlAdminUsername=${{ secrets.SQL_USERNAME }} sqlAdmin=${{ secrets.SQL_PASSWORD }}
           failOnStdErr: false
             
 
