@@ -30,7 +30,7 @@ jobs:
         uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
-          resourceGroupName: MyResourceGroup
+          resourceGroupName: ashu-rg
           template: ./deploy/main.bicep
           parameters: sqlAdminUsername=${{ secrets.SQL_USERNAME }} sqlAdmin=${{ secrets.SQL_PASSWORD }}
           failOnStdErr: false
