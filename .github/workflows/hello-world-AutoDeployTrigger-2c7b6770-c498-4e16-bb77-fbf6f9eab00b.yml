@@ -19,7 +19,7 @@ jobs:
       - name: Checkout to the branch
         uses: actions/checkout@v2
       - name: Filter paths
-      - uses: dorny/paths-filter@v3
+        uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: |
@@ -38,11 +38,11 @@ jobs:
           login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
-      - name: Build and push image
-        if: steps.changes.outputs.src == 'true'
-        run: |
-          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/epicapp:${{ github.sha }}
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/epicapp:${{ github.sha }}
+      #- name: Build and push image
+      #  if: steps.changes.outputs.src == 'true'
+      #  run: |
+      #    docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/epicapp:${{ github.sha }}
+      #    docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/epicapp:${{ github.sha }}
       - name: deploy
         uses: azure/arm-deploy@v1
         with:
