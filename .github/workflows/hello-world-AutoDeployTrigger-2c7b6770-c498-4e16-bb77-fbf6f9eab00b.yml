@@ -18,7 +18,13 @@ jobs:
     steps:
       - name: Checkout to the branch
         uses: actions/checkout@v2
-
+      - name: Filter paths
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            src:
+              - 'src/**'
       - name: Azure Login
         uses: azure/login@v2
         with:
@@ -26,6 +32,8 @@ jobs:
           tenant-id: ${{ secrets.TENANT_ID }}
           subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
       - name: 'Build and push image'
+        #Run this tep if any change in src folder
+        if: steps.changes.outputs.src == 'true'
         uses: azure/docker-login@v1
         with:
           login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}

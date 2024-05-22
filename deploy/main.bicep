@@ -5,7 +5,9 @@ param keyVaultName string = 'kv${appName}'
 param lastDeployed string = utcNow('d')
 
 //this is used as a conditional when deploying the container app
-param isContainerImagePresent bool = false
+param isContainerImagePresent bool = true
+
+param createResource bool = false
 
 //container registry
 param containerRegistryName string = 'acr${appName}'
@@ -28,7 +30,7 @@ var tags = {
   LastDeployed: lastDeployed
 }
 
-resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
+resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = if (createResource){
   name: keyVaultName
   location: location
   tags: tags
@@ -47,7 +49,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
 }
 //module invocations:
 
-module logAnalytics 'logAnalytics.bicep' = {
+module logAnalytics 'logAnalytics.bicep' =  if (createResource){
   name: 'log-analytics'
   params: {
     tags: tags
@@ -57,7 +59,7 @@ module logAnalytics 'logAnalytics.bicep' = {
   }
 }
 
-module containerEnv 'containerAppEnvironment.bicep' = {
+module containerEnv 'containerAppEnvironment.bicep' =  if (createResource){
   name: 'container-app-env'
   params: {
     containerEnvironmentName: containerEnvironmentName
@@ -68,7 +70,7 @@ module containerEnv 'containerAppEnvironment.bicep' = {
   }
 }
 
-module containerRegistry 'containerRegistry.bicep' = {
+module containerRegistry 'containerRegistry.bicep' =  if (createResource){
   name: 'acr'
   params: {
     tags: tags
