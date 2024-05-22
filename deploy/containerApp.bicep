@@ -48,7 +48,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
     containers: [
       {
         name: containerAppName
-        image: '${acrServerName}/epicapp:latest'
+        image: '${acrServerName}/epicapp:ddc1b23c4407491218de1cdfcf1966f98ccc0631'
         env: envVariables
         resources: {
           cpu: 1
