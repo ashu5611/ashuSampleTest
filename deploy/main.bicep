@@ -1,6 +1,6 @@
-var location string = resourceGroup().location
-var appName string = uniqueString(resourceGroup().id)
-var logAnalyticsWorkspaceName string = 'law${appName}'
+param location string = resourceGroup().location
+param appName string = uniqueString(resourceGroup().id)
+param logAnalyticsWorkspaceName string = 'law${appName}'
 param keyVaultName string = 'kv${appName}'
 param lastDeployed string = utcNow('d')
 param imageTag string
