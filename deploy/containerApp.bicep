@@ -10,10 +10,6 @@ param envVariables array = []
 param tags object
 param imageTag string
 
-resource postgresDb 'Microsoft.DBforPostgreSQL/servers/databases@2017-12-01' = {
-  name: dbName
-  parent: postgresServer
-}
 resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
   name: containerAppName
   location: location
