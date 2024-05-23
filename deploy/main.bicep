@@ -29,7 +29,7 @@ var tags = {
   LastDeployed: lastDeployed
 }
 
-resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = if (createResource){
+resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
   name: keyVaultName
   location: location
   tags: tags
@@ -82,9 +82,9 @@ module containerRegistry 'containerRegistry.bicep' =  {
 module db 'postgresdb.bicep' =  {
   name: 'postgres-db'
   params: {
-    tags: tags
+
     location: location
-    dbUser: dbUsername
+    dbUsername: dbUsername
     dbPassword: dbPassword
     serverName: 'ashu-db-server'
     dbName: 'ashu-db'
@@ -93,7 +93,7 @@ module db 'postgresdb.bicep' =  {
 
 module containerApp 'containerApp.bicep' = {
   name: 'container-app'
-  dependson: [
+  dependsOn: [
     containerRegistry
     db
   ]
