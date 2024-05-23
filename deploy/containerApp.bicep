@@ -8,8 +8,12 @@ param acrUsername string
 param acrPasswordSecret string
 param envVariables array = []
 param tags object
+param imageTag string
 
-
+resource postgresDb 'Microsoft.DBforPostgreSQL/servers/databases@2017-12-01' = {
+  name: dbName
+  parent: postgresServer
+}
 resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
   name: containerAppName
   location: location
@@ -48,7 +52,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
     containers: [
       {
         name: containerAppName
-        image: '${acrServerName}/epicapp:ddc1b23c4407491218de1cdfcf1966f98ccc0631'
+        image: '${acrServerName}/epicapp:${imageTag}'
         env: envVariables
         resources: {
           cpu: 1

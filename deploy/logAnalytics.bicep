@@ -1,7 +1,7 @@
 param logAnalyticsWorkspaceName string
 param location string
 param tags object
-param keyVaultName string
+param keyVault string = keyVaultName
 
 var sharedKeyName = 'law-shared-key'
 

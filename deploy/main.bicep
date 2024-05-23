@@ -1,13 +1,12 @@
-param location string = resourceGroup().location
-param appName string = uniqueString(resourceGroup().id)
-param logAnalyticsWorkspaceName string = 'law${appName}'
+var location string = resourceGroup().location
+var appName string = uniqueString(resourceGroup().id)
+var logAnalyticsWorkspaceName string = 'law${appName}'
 param keyVaultName string = 'kv${appName}'
 param lastDeployed string = utcNow('d')
-
-//this is used as a conditional when deploying the container app
-param isContainerImagePresent bool = true
-
-param createResource bool = false
+param imageTag string
+param dbUsername string
+@secure()
+param dbPassword string
 
 //container registry
 param containerRegistryName string = 'acr${appName}'
@@ -80,10 +79,27 @@ module containerRegistry 'containerRegistry.bicep' =  if (createResource){
   }
 }
 
-module containerApp 'containerApp.bicep' = if (isContainerImagePresent){
-  name: 'container-app'
+module db 'postgresdb.bicep' =  {
+  name: 'postgres-db'
   params: {
     tags: tags
+    location: location
+    dbUser: dbUsername
+    dbPassword: dbPassword
+    serverName: 'ashu-db-server'
+    dbName: 'ashu-db'
+  }
+}
+
+module containerApp 'containerApp.bicep' = if (isContainerImagePresent){
+  name: 'container-app'
+  dependson: [
+    containerRegistry
+    db
+  ]
+  params: {
+    tags: tags
+    imageTag: imageTag
     location: location
     containerAppName: containerAppName
     envVariables: containerAppEnvVariables
