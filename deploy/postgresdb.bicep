@@ -45,13 +45,14 @@ resource postgresServer 'Microsoft.DBforPostgreSQL/flexibleServers@2021-06-01' =
   }
 }
 
-resource postgresDb 'Microsoft.DBforPostgreSQL/servers/databases@2017-12-01' = {
-  name: '${dbName}'
+resource postgresDb 'Microsoft.DBforPostgreSQL/flexibleServers/databases@2022-12-01' = {
+  name: dbName
   parent: postgresServer
 }
 
-resource postgresFirewallRule 'Microsoft.DBforPostgreSQL/servers/firewallRules@2017-12-01' = {
-  name: '${postgresServer.name}/AllowAll'
+resource postgresFirewallRule 'Microsoft.DBforPostgreSQL/flexibleServers/firewallRules@2022-12-01' = {
+  name: 'AllowAll'
+  parent: postgresServer
   properties: {
     startIpAddress: startIpAddress
     endIpAddress: endIpAddress
