@@ -7,7 +7,7 @@ param dbName string
 param serverEdition string = 'Burstable'
 param skuSizeGB int = 32
 param dbInstanceType string = 'Standard_B1ms'
-param haMode string = 'ZoneRedundant'
+param haMode string = 'Disabled'
 param availabilityZone string = '1'
 param version string = '12'
 param virtualNetworkExternalId string = ''
@@ -15,6 +15,7 @@ param subnetName string = ''
 param privateDnsZoneArmResourceId string = ''
 param startIpAddress string = '0.0.0.0'
 param endIpAddress string = '0.0.0.0'
+
 
 resource postgresServer 'Microsoft.DBforPostgreSQL/flexibleServers@2021-06-01' = {
   name: serverName
@@ -34,6 +35,7 @@ resource postgresServer 'Microsoft.DBforPostgreSQL/flexibleServers@2021-06-01' =
     highAvailability: {
       mode: haMode
     }
+
     storage: {
       storageSizeGB: skuSizeGB
     }
