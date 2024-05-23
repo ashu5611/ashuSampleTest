@@ -8,7 +8,6 @@ param serverEdition string = 'Burstable'
 param skuSizeGB int = 32
 param dbInstanceType string = 'Standard_B1ms'
 param haMode string = 'Disabled'
-param availabilityZone string = '1'
 param version string = '12'
 param virtualNetworkExternalId string = ''
 param subnetName string = ''
@@ -43,7 +42,6 @@ resource postgresServer 'Microsoft.DBforPostgreSQL/flexibleServers@2021-06-01' =
       backupRetentionDays: 7
       geoRedundantBackup: 'Disabled'
     }
-    availabilityZone: availabilityZone
   }
 }
 
