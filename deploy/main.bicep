@@ -46,6 +46,18 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
     ]
   }
 }
+
+module db 'postgresdb.bicep' =  {
+  name: 'postgres-db'
+  params: {
+
+    location: location
+    dbUsername: dbUsername
+    dbPassword: dbPassword
+    serverName: 'ashu-db-server'
+    dbName: 'ashu-db'
+  }
+}
 //module invocations:
 
 module logAnalytics 'logAnalytics.bicep' = {
@@ -76,18 +88,6 @@ module containerRegistry 'containerRegistry.bicep' =  {
     crName: containerRegistryName
     keyVaultName: keyVault.name
     location: location
-  }
-}
-
-module db 'postgresdb.bicep' =  {
-  name: 'postgres-db'
-  params: {
-
-    location: location
-    dbUsername: dbUsername
-    dbPassword: dbPassword
-    serverName: 'ashu-db-server'
-    dbName: 'ashu-db'
   }
 }
 
