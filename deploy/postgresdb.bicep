@@ -1,7 +1,7 @@
 param dbUsername string
 @secure()
 param dbPassword string
-param location string = resourceGroup().location
+param location string = 'North Europe'
 param serverName string
 param dbName string
 param serverEdition string = 'Burstable'
