@@ -1,7 +1,7 @@
 param dbUsername string
 @secure()
 param dbPassword string
-param location string = 'North Europe'
+param location string = 'East US'
 param serverName string
 param dbName string
 param serverEdition string = 'Burstable'
