@@ -48,7 +48,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = if (createResource){
 }
 //module invocations:
 
-module logAnalytics 'logAnalytics.bicep' =  if (createResource){
+module logAnalytics 'logAnalytics.bicep' = {
   name: 'log-analytics'
   params: {
     tags: tags
@@ -58,7 +58,7 @@ module logAnalytics 'logAnalytics.bicep' =  if (createResource){
   }
 }
 
-module containerEnv 'containerAppEnvironment.bicep' =  if (createResource){
+module containerEnv 'containerAppEnvironment.bicep' = {
   name: 'container-app-env'
   params: {
     containerEnvironmentName: containerEnvironmentName
@@ -69,7 +69,7 @@ module containerEnv 'containerAppEnvironment.bicep' =  if (createResource){
   }
 }
 
-module containerRegistry 'containerRegistry.bicep' =  if (createResource){
+module containerRegistry 'containerRegistry.bicep' =  {
   name: 'acr'
   params: {
     tags: tags
@@ -91,7 +91,7 @@ module db 'postgresdb.bicep' =  {
   }
 }
 
-module containerApp 'containerApp.bicep' = if (isContainerImagePresent){
+module containerApp 'containerApp.bicep' = {
   name: 'container-app'
   dependson: [
     containerRegistry
