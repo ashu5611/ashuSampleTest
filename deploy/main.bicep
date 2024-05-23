@@ -50,8 +50,6 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
 module db 'postgresdb.bicep' =  {
   name: 'postgres-db'
   params: {
-
-    location: location
     dbUsername: dbUsername
     dbPassword: dbPassword
     serverName: 'ashu-db-server'
