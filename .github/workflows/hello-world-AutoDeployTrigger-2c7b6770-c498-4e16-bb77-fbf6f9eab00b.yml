@@ -17,7 +17,7 @@ env:
   secretNameRegistryPassword : 'acr-password-shared-key'
 
 jobs:
-  build-and-deploy:
+  create-infra:
     runs-on: ubuntu-latest
 
     steps:
@@ -44,11 +44,22 @@ jobs:
           template: ./deploy/main.bicep
           parameters: dbUsername=${{ secrets.SQL_USERNAME }} dbPassword=${{ secrets.SQL_PASSWORD }} appName=${{ env.appName }} secretNameRegistryUser=${{ env.secretNameRegistryUser }} secretNameRegistryPassword=${{ env.secretNameRegistryPassword }}
           failOnStdErr: false
+
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    needs: create-infra
+    steps:
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.CLIENT_ID }}
+          tenant-id: ${{ secrets.TENANT_ID }}
+          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
       - name: Get KeyVault secrets
         uses: Azure/get-keyvault-secrets@v1
         with:
-            keyvault: kv-{env.appName}
-            secrets: '$secretNameRegistryUser, $secretNameRegistryPassword, registry-login-server'
+          keyvault: 'kv${{ env.appName }}'
+          secrets: '$secretNameRegistryUser, $secretNameRegistryPassword, registry-login-server'
         id: getSecretAction
       - name: 'Login to ACR'
         uses: azure/docker-login@v1
@@ -63,6 +74,11 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ steps.getSecretAction.outputs.registry-login-server }}/epicapp:${{ github.sha }}
+  
+  deploy-app:
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
       - name: deploy container app
         uses: azure/arm-deploy@v1
         with:
