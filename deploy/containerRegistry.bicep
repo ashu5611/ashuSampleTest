@@ -10,6 +10,10 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: keyVaultName
 }
 
+resource userIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' existing = {
+  name: 'ashuSampleTest-githubAction'
+}
+
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2022-02-01-preview' = {
   name: crName
   location: location
@@ -22,6 +26,9 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2022-02-01-pr
   }
   identity: {
     type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${userIdentity.id}': {}
+    }
   }
 }
 

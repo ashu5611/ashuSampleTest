@@ -26,6 +26,9 @@ var tags = {
   LastDeployed: lastDeployed
 }
 
+resource userIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' existing = {
+  name: 'ashuSampleTest-githubAction'
+}
 
 resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
   name: containerAppName
@@ -81,5 +84,8 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
   }
   identity: {
     type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${userIdentity.id}': {}
+    }
   }
 }
