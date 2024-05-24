@@ -1,11 +1,15 @@
 param location string = resourceGroup().location
-param appName string = '235611'
+param appName string
 param logAnalyticsWorkspaceName string = 'law${appName}'
 param keyVaultName string = 'kv${appName}'
 param lastDeployed string = utcNow('d')
 param dbUsername string
 @secure()
 param dbPassword string
+@secure()
+param secretNameRegistryUser string 
+@secure() 
+param secretNameRegistryPassword string
 
 //container registry
 param containerRegistryName string = 'acr${appName}'
@@ -77,5 +81,7 @@ module containerRegistry 'containerRegistry.bicep' =  {
     crName: containerRegistryName
     keyVaultName: keyVault.name
     location: location
+    usernameSecret:  secretNameRegistryUser
+    primaryPasswordSecret:  secretNameRegistryPassword
   }
 }

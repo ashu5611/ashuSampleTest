@@ -2,9 +2,12 @@ param crName string
 param location string
 param tags object
 param keyVaultName string
+var registryLoginServer = 'registry-login-server'
 
-var primaryPasswordSecret = 'acr-password-shared-key'
-var usernameSecret = 'acr-username-shared-key'
+@secure()
+param primaryPasswordSecret string
+@secure()
+param usernameSecret string
 
 resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: keyVaultName
@@ -51,5 +54,11 @@ resource acrPasswordSecret1 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
   }
 }
 
-
-output serverName string = containerRegistry.properties.loginServer
+//adding login server  to key vault
+resource acrLoginServer 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
+  name: registryLoginServer
+  parent: keyVault
+  properties: {
+    value: containerRegistry.properties.loginServer
+  }
+}
