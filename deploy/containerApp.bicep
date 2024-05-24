@@ -1,14 +1,31 @@
-param containerAppName string
+param appName string = '235611'
 param location string
 param containerAppEnvId string
 param acrServerName string
+param imageTag string
+param lastDeployed string = utcNow('d')
+
 @secure()
-param acrUsername string
+param acrUsername string 
 @secure()
 param acrPasswordSecret string
-param envVariables array = []
-param tags object
-param imageTag string
+
+//container app
+param containerAppName string = 'aca${appName}'
+
+var containerAppEnvVariables = [
+  {
+    name: 'ASPNETCORE_ENVIRONMENT'
+    value: 'Development'
+  }
+]
+
+var tags = {
+  ApplicationName: 'epicApp'
+  Environment: 'Development'
+  LastDeployed: lastDeployed
+}
+
 
 resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
   name: containerAppName
@@ -49,7 +66,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
       {
         name: containerAppName
         image: '${acrServerName}/epicapp:${imageTag}'
-        env: envVariables
+        env: containerAppEnvVariables
         resources: {
           cpu: 1
           memory: '2.0Gi'
@@ -63,6 +80,6 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
    }
   }
   identity: {
-    type: 'SystemAssigned'
+    type: 'UserAssigned'
   }
 }

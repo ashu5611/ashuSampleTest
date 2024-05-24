@@ -31,6 +31,15 @@ jobs:
           client-id: ${{ secrets.CLIENT_ID }}
           tenant-id: ${{ secrets.TENANT_ID }}
           subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
+      - name: deploy infra
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+          resourceGroupName: ashu-rg
+          template: ./deploy/main.bicep
+          parameters: dbUsername=${{ secrets.SQL_USERNAME }} dbPassword=${{ secrets.SQL_PASSWORD }}
+          failOnStdErr: false
+
       - name: 'Login to ACR'
         uses: azure/docker-login@v1
         with:
@@ -41,13 +50,13 @@ jobs:
         run: |
           docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/epicapp:${{ github.sha }}
           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/epicapp:${{ github.sha }}
-      - name: deploy
+      - name: deploy container app
         uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
           resourceGroupName: ashu-rg
-          template: ./deploy/main.bicep
-          parameters: dbUsername=${{ secrets.SQL_USERNAME }} dbPassword=${{ secrets.SQL_PASSWORD }} imageTag=${{ github.sha }}
+          template: ./deploy/deploy.bicep
+          parameters: imageTag=${{ github.sha }}
           failOnStdErr: false
             
 

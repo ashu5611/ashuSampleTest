@@ -3,7 +3,6 @@ param appName string = '235611'
 param logAnalyticsWorkspaceName string = 'law${appName}'
 param keyVaultName string = 'kv${appName}'
 param lastDeployed string = utcNow('d')
-param imageTag string
 param dbUsername string
 @secure()
 param dbPassword string
@@ -14,14 +13,6 @@ param containerRegistryName string = 'acr${appName}'
 //container environment
 param containerEnvironmentName string = 'env${appName}'
 
-//container app
-param containerAppName string = 'aca${appName}'
-var containerAppEnvVariables = [
-  {
-    name: 'ASPNETCORE_ENVIRONMENT'
-    value: 'Development'
-  }
-]
 
 var tags = {
   ApplicationName: 'epicApp'
@@ -86,24 +77,5 @@ module containerRegistry 'containerRegistry.bicep' =  {
     crName: containerRegistryName
     keyVaultName: keyVault.name
     location: location
-  }
-}
-
-module containerApp 'containerApp.bicep' = {
-  name: 'container-app'
-  dependsOn: [
-    containerRegistry
-    db
-  ]
-  params: {
-    tags: tags
-    imageTag: imageTag
-    location: location
-    containerAppName: containerAppName
-    envVariables: containerAppEnvVariables
-    containerAppEnvId: containerEnv.outputs.containerAppEnvId
-    acrServerName: containerRegistry.outputs.serverName
-    acrUsername: keyVault.getSecret('acr-username-shared-key')
-    acrPasswordSecret: keyVault.getSecret('acr-password-shared-key')
   }
 }
