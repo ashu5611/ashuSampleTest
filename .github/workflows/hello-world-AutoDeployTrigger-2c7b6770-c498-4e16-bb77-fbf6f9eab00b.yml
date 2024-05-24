@@ -33,9 +33,9 @@ jobs:
       - name: Azure Login
         uses: azure/login@v2
         with:
-          clientId: ${{ secrets.CLIENT_ID }}
-          tenantId: ${{ secrets.TENANT_ID }}
-          subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+          client-id: ${{ secrets.CLIENT_ID }}
+          tenant-id: ${{ secrets.TENANT_ID }}
+          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
       - name: deploy infra
         uses: azure/arm-deploy@v1
         with:
