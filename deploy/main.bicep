@@ -7,9 +7,9 @@ param dbUsername string
 @secure()
 param dbPassword string
 @secure()
-param secretNameRegistryUser string 
+param param1 string 
 @secure() 
-param secretNameRegistryPassword string
+param param2 string
 
 //container registry
 param containerRegistryName string = 'acr${appName}'
@@ -81,7 +81,7 @@ module containerRegistry 'containerRegistry.bicep' =  {
     crName: containerRegistryName
     keyVaultName: keyVault.name
     location: location
-    usernameSecret:  secretNameRegistryUser
-    primaryPasswordSecret:  secretNameRegistryPassword
+    usernameSecret:  param1
+    primaryPasswordSecret:  param2
   }
 }

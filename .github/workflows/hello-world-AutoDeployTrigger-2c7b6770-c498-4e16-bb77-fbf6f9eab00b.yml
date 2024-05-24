@@ -42,7 +42,7 @@ jobs:
           subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
           resourceGroupName: ashu-rg
           template: ./deploy/main.bicep
-          parameters: dbUsername=${{ secrets.SQL_USERNAME }} dbPassword=${{ secrets.SQL_PASSWORD }} appName=$appName secretNameRegistryUser=$secretNameRegistryUser secretNameRegistryPassword=$secretNameRegistryUser
+          parameters: dbUsername=${{ secrets.SQL_USERNAME }} dbPassword=${{ secrets.SQL_PASSWORD }} appName=$appName param1=$secretNameRegistryUser param2=$secretNameRegistryUser
           failOnStdErr: false
       - name: Get KeyVault secrets
         uses: Azure/get-keyvault-secrets@v1
