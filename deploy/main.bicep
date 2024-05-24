@@ -1,5 +1,5 @@
 param location string = resourceGroup().location
-param appName string = uniqueString(resourceGroup().id)
+param appName string = '235611'
 param logAnalyticsWorkspaceName string = 'law${appName}'
 param keyVaultName string = 'kv${appName}'
 param lastDeployed string = utcNow('d')
@@ -52,8 +52,8 @@ module db 'postgresdb.bicep' =  {
   params: {
     dbUsername: dbUsername
     dbPassword: dbPassword
-    serverName: 'ashu-db-server'
-    dbName: 'ashu-db'
+    serverName: 'ashu-postgres-db-server'
+    dbName: 'ashu-postgres-db'
   }
 }
 //module invocations:
