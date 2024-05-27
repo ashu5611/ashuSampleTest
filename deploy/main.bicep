@@ -24,6 +24,10 @@ var tags = {
   LastDeployed: lastDeployed
 }
 
+resource userIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' existing = {
+  name: 'ashuSampleTest-githubAction'
+}
+
 resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
   name: keyVaultName
   location: location
@@ -38,6 +42,25 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
     enabledForTemplateDeployment: true
     enableSoftDelete: false
     accessPolicies: [
+      {
+        applicationId: userIdentity.id
+        objectId: userIdentity.properties.principalId
+        permissions: {
+          certificates: [
+            'all'
+          ]
+          keys: [
+            'all'
+          ]
+          secrets: [
+            'all'
+          ]
+          storage: [
+            'all'
+          ]
+        }
+        tenantId: tenant().tenantId
+      }
     ]
   }
 }
