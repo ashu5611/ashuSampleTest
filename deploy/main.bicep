@@ -52,8 +52,8 @@ resource keyVaultSecretUserRoleAssignment 'Microsoft.Authorization/roleAssignmen
   name: guid(resourceGroup().id, 'keyVaultSecretUserRoleAssignment')
   scope: keyVault
   properties: {
-    principalId: userIdentity.properties.clientId  
-    roleDefinitionId: '4633458b-17de-408a-b874-0445c86b69e6' // Key Vault Secrets Officer
+    principalId: userIdentity.properties.principalId 
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '2a2b9908-6ea1-4ae2-8e65-a410df84e7d1') // Key Vault Secrets Officer
   }
 }
 
