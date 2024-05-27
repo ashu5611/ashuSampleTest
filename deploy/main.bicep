@@ -41,26 +41,9 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
     enabledForDeployment: true
     enabledForTemplateDeployment: true
     enableSoftDelete: false
+    enableRbacAuthorization: true
     accessPolicies: [
-      {
-        applicationId: userIdentity.properties.clientId
-        objectId: userIdentity.properties.principalId
-        permissions: {
-          certificates: [
-            'all'
-          ]
-          keys: [
-            'all'
-          ]
-          secrets: [
-            'all'
-          ]
-          storage: [
-            'all'
-          ]
-        }
-        tenantId: tenant().tenantId
-      }
+
     ]
   }
 }
