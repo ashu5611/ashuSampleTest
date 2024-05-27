@@ -24,6 +24,9 @@ var tags = {
   LastDeployed: lastDeployed
 }
 
+resource userIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' existing = {
+  name: 'ashuSampleTest-githubAction'
+}
 
 resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
   name: keyVaultName
@@ -44,6 +47,16 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
     ]
   }
 }
+
+resource keyVaultSecretUserRoleAssignment 'Microsoft.Authorization/roleAssignments@2020-08-01-preview' = {
+  name: guid(resourceGroup().id, 'keyVaultSecretUserRoleAssignment')
+  scope: keyVault
+  properties: {
+    principalId: userIdentity.properties.clientId  
+    roleDefinitionId: '4633458b-17de-408a-b874-0445c86b69e6' // Key Vault Secrets Officer
+  }
+}
+
 
 module db 'postgresdb.bicep' =  {
   name: 'postgres-db'
