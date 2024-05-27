@@ -43,7 +43,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
     enableSoftDelete: false
     accessPolicies: [
       {
-        applicationId: userIdentity.id
+        applicationId: userIdentity.properties.clientId
         objectId: userIdentity.properties.principalId
         permissions: {
           certificates: [
