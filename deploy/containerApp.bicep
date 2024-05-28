@@ -37,7 +37,6 @@ var containerAppEnvVariables = [
   }
 
 ]
-
 var tags = {
   ApplicationName: 'epicApp'
   Environment: 'Development'
