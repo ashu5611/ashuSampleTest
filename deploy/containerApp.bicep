@@ -10,6 +10,11 @@ param acrUsername string
 @secure()
 param acrPasswordSecret string
 
+@secure()
+param dbUsername string
+@secure()
+param dbPassword string
+
 //container app
 param containerAppName string = 'aca${appName}'
 
@@ -18,6 +23,19 @@ var containerAppEnvVariables = [
     name: 'ASPNETCORE_ENVIRONMENT'
     value: 'Development'
   }
+  {
+    name: 'SPRING_DATASOURCE_USERNAME'
+    value: dbUsername
+  }
+  {
+    name: 'SPRING_DATASOURCE_PASSWORD'
+    value: dbPassword
+  }
+  {
+    name: 'SPRING_DATASOURCE_URL'
+    value: 'jdbc:postgresql://ashu-postgres-new-db-server.postgres.database.azure.com:5432/ashu-postgres-new-db'
+  }
+
 ]
 
 var tags = {
@@ -41,7 +59,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
     ingress: {
       external: true
       transport: 'http'
-      targetPort: 3500
+      targetPort: 1989
       allowInsecure: false
       traffic: [
         {

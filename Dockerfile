@@ -5,7 +5,7 @@ RUN gradle build --no-daemon
 
 
 FROM openjdk:17-oracle
-EXPOSE 8080
+EXPOSE 1989
 
 USER root
 RUN mkdir -p /app

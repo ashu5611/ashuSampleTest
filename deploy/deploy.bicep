@@ -25,5 +25,7 @@ module containerApp 'containerApp.bicep' = {
     acrPasswordSecret: keyVault.getSecret('acr-password-shared-key')
     imageTag: imageTag
     location: resourceGroup().location
+    dbUsername: keyVault.getSecret('db-username')
+    dbPassword: keyVault.getSecret('db-password')
   }
 }
