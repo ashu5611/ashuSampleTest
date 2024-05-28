@@ -59,7 +59,7 @@ jobs:
         uses: Azure/get-keyvault-secrets@v1
         with:
           keyvault: 'kv${{ env.appName }}'
-          secrets: '$secretNameRegistryUser, $secretNameRegistryPassword, registry-login-server'
+          secrets: '${{ env.secretNameRegistryUser }}, ${{ env.secretNameRegistryPassword}}, registry-login-server'
         id: getSecretAction
       - name: 'Login to ACR'
         uses: azure/docker-login@v1
