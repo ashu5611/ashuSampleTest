@@ -57,13 +57,6 @@ resource keyVaultSecretUserRoleAssignment 'Microsoft.Authorization/roleAssignmen
   }
 }
 
-module vnet 'virtulNetwork.bicep' = {
-  name: 'vnet'
-  params: {
-    location: location
-    tags: tags
-  }
-}
 
 module db 'postgresdb.bicep' =  {
   name: 'postgres-db'
