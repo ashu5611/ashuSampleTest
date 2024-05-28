@@ -33,7 +33,7 @@ var containerAppEnvVariables = [
   }
   {
     name: 'SPRING_DATASOURCE_URL'
-    value: 'jdbc:postgresql://ashu-postgres-new-db-server.postgres.database.azure.com:5432/ashu-postgres-new-db'
+    value: 'jdbc:postgresql://ashu-app-postgres-db-server.postgres.database.azure.com:5432/ashu-postgres-new-db'
   }
 
 ]

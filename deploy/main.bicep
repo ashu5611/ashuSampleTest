@@ -78,8 +78,8 @@ module db 'postgresdb.bicep' =  {
   params: {
     dbUsername: dbUsername
     dbPassword: dbPassword
-    serverName: 'ashu-postgres-new-db-server'
-    dbName: 'ashu-postgres-new-db'
+    serverName: 'ashu-app-postgres-db-server'
+    dbName: 'ashu-app-postgres-db'
   }
 }
 //module invocations:
