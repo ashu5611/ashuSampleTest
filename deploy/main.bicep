@@ -57,6 +57,21 @@ resource keyVaultSecretUserRoleAssignment 'Microsoft.Authorization/roleAssignmen
   }
 }
 
+resource userName 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
+  name: 'db-username'
+  parent: keyVault
+  properties: {
+    value: dbUsername
+  }
+}
+
+resource password 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
+  name: 'db-password'
+  parent: keyVault
+  properties: {
+    value: dbPassword
+  }
+}
 
 module db 'postgresdb.bicep' =  {
   name: 'postgres-db'
