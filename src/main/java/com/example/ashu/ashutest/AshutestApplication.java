@@ -1,15 +1,12 @@
 package com.example.ashu.ashutest;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,6 +31,11 @@ public class AshutestApplication {
     public void create(@RequestParam(value = "id", defaultValue = "World") int id) {
         bookRepo.save(new Book(id, "Book 1"));
     }
+
+	@GetMapping("/create")
+	public List<Book> getAll() {
+		return bookRepo.findAll();
+	}
 
 
 
