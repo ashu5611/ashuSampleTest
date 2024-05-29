@@ -2,6 +2,8 @@ param location string = resourceGroup().location
 param appName string
 param logAnalyticsWorkspaceName string = 'law${appName}'
 param keyVaultName string = 'kv${appName}'
+param vnetName string = 'vnet${appName}'
+param subnetName string = 'subnet${appName}'
 param lastDeployed string = utcNow('d')
 param dbUsername string
 @secure()
@@ -73,13 +75,24 @@ resource password 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
   }
 }
 
+module vnet 'virtualNetwork.bicep' = {
+  name: 'vnet'
+  params: {
+    vnetName: vnetName
+    tags: tags
+    subnetName: subnetName
+  }
+}
+
 module db 'postgresdb.bicep' =  {
   name: 'postgres-db'
   params: {
     dbUsername: dbUsername
     dbPassword: dbPassword
-    serverName: 'ashu-app-postgres-db-server'
-    dbName: 'ashu-app-postgres-db'
+    serverName: 'ashu-vnet-postgres-db-server'
+    dbName: 'ashu-vnet-postgres-db'
+    vnetName: vnetName
+    subnetName: subnetName
   }
 }
 //module invocations:

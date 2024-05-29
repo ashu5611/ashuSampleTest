@@ -1,7 +1,6 @@
 param dbUsername string
 @secure()
 param dbPassword string
-param location string = 'East US'
 param serverName string
 param dbName string
 param serverEdition string = 'Burstable'
@@ -9,16 +8,25 @@ param skuSizeGB int = 32
 param dbInstanceType string = 'Standard_B1ms'
 param haMode string = 'Disabled'
 param version string = '12'
-param virtualNetworkExternalId string = ''
-param subnetName string = ''
-param privateDnsZoneArmResourceId string = ''
-param startIpAddress string = '0.0.0.0'
-param endIpAddress string = '0.0.0.0'
+param subnetName string 
+param vnetName string
 
+
+resource privateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' existing = {
+  name: 'ashu-postgres-new-db-server.private.postgres.database.azure.com'
+}
+
+resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' existing = {
+  name: vnetName
+  resource subnet 'subnets' existing = {
+    name: '${subnetName}-db'
+  
+  }
+}
 
 resource postgresServer 'Microsoft.DBforPostgreSQL/flexibleServers@2021-06-01' = {
   name: serverName
-  location: location
+  location: resourceGroup().location
   sku: {
     name: dbInstanceType
     tier: serverEdition
@@ -28,8 +36,8 @@ resource postgresServer 'Microsoft.DBforPostgreSQL/flexibleServers@2021-06-01' =
     administratorLogin: dbUsername
     administratorLoginPassword: dbPassword
     network: {
-      delegatedSubnetResourceId: (empty(virtualNetworkExternalId) ? null : json('\'${virtualNetworkExternalId}/subnets/${subnetName}\''))
-      privateDnsZoneArmResourceId: (empty(virtualNetworkExternalId) ? null : privateDnsZoneArmResourceId)
+      delegatedSubnetResourceId: virtualNetwork::subnet.id
+      privateDnsZoneArmResourceId: privateDnsZone.id
     }
     highAvailability: {
       mode: haMode
@@ -50,11 +58,3 @@ resource postgresDb 'Microsoft.DBforPostgreSQL/flexibleServers/databases@2022-12
   parent: postgresServer
 }
 
-resource postgresFirewallRule 'Microsoft.DBforPostgreSQL/flexibleServers/firewallRules@2022-12-01' = {
-  name: 'AllowAll'
-  parent: postgresServer
-  properties: {
-    startIpAddress: startIpAddress
-    endIpAddress: endIpAddress
-  }
-}

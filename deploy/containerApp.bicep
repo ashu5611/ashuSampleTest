@@ -20,24 +20,15 @@ param containerAppName string = 'aca${appName}'
 
 var containerAppEnvVariables = [
   {
-    name: 'ASPNETCORE_ENVIRONMENT'
+    name: 'test.profile'
     value: 'Development'
   }
   {
-    name: 'SPRING_DATASOURCE_USERNAME'
-    value: dbUsername
-  }
-  {
-    name: 'SPRING_DATASOURCE_PASSWORD'
-    value: dbPassword
-  }
-  {
     name: 'SPRING_DATASOURCE_URL'
-    value: 'jdbc:postgresql://ashu-app-postgres-db-server.postgres.database.azure.com:5432/ashu-app-postgres-db'
+    value: 'jdbc:postgresql://ashu-vnet-postgres-db-server.postgres.database.azure.com:5432/ashu-vnet-postgres-db'
   }
 
 ]
-
 var tags = {
   ApplicationName: 'epicApp'
   Environment: 'Development'
@@ -73,6 +64,14 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
         name: 'container-registry-password'
         value: acrPasswordSecret
       }
+      {
+        name: 'SPRING_DATASOURCE_USERNAME'
+        value: dbUsername
+      }
+      {
+        name: 'SPRING_DATASOURCE_PASSWORD'
+        value: dbPassword
+      }
     ]
     registries: [
       {
@@ -96,7 +95,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
     ]
     scale: {
       minReplicas: 1
-      maxReplicas: 10
+      maxReplicas: 2
     }
    }
   }

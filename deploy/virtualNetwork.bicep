@@ -1,9 +1,11 @@
 param vnetName string
 param subnetName string
+param tags object 
 
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
   name: vnetName
   location: resourceGroup().location
+  tags: tags
   properties: {
     addressSpace: {
       addressPrefixes: [
@@ -13,7 +15,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
   }
 
   resource databaseSubnet 'subnets' = {
-    name: 'database-subnet'
+    name: '${subnetName}-db'
     properties: {
       addressPrefix: '10.0.0.0/24'
       delegations: [
@@ -27,8 +29,8 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
     }
   }
 
-  resource webappSubnet 'subnets' = {
-    name: 'app-subnet'
+  resource containerAppSubnet 'subnets' = {
+    name: '${subnetName}-app'
     properties: {
       addressPrefix: '10.0.1.0/24'
       delegations: [
@@ -45,11 +47,11 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
 
 
 resource privateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' = {
-  name: 'ashu-app-postgres-db-server.private.postgres.database.azure.com'
+  name: 'ashu-vnet-postgres-db-server.private.postgres.database.azure.com'
   location: 'global'
 
   resource vnetLink 'virtualNetworkLinks' = {
-    name: 'ashu-app-postgres-db-server-link'
+    name: 'ashu-vnet-postgres-db-server-link'
     location: 'global'
     properties: {
       registrationEnabled: false
