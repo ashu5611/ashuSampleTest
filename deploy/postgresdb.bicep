@@ -1,7 +1,6 @@
 param dbUsername string
 @secure()
 param dbPassword string
-param location string = 'East US'
 param serverName string
 param dbName string
 param serverEdition string = 'Burstable'
@@ -11,8 +10,6 @@ param haMode string = 'Disabled'
 param version string = '12'
 param subnetName string 
 param vnetName string
-param startIpAddress string = '0.0.0.0'
-param endIpAddress string = '0.0.0.0'
 
 
 resource privateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' existing = {
@@ -29,7 +26,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' existing 
 
 resource postgresServer 'Microsoft.DBforPostgreSQL/flexibleServers@2021-06-01' = {
   name: serverName
-  location: location
+  location: resourceGroup().location
   sku: {
     name: dbInstanceType
     tier: serverEdition

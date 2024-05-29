@@ -47,11 +47,11 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
 
 
 resource privateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' = {
-  name: 'ashu-app-postgres-db-server.private.postgres.database.azure.com'
+  name: 'ashu-vnet-postgres-db-server.private.postgres.database.azure.com'
   location: 'global'
 
   resource vnetLink 'virtualNetworkLinks' = {
-    name: 'ashu-app-postgres-db-server-link'
+    name: 'ashu-vnet-postgres-db-server-link'
     location: 'global'
     properties: {
       registrationEnabled: false

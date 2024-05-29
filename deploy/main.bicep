@@ -89,8 +89,8 @@ module db 'postgresdb.bicep' =  {
   params: {
     dbUsername: dbUsername
     dbPassword: dbPassword
-    serverName: 'ashu-app-postgres-db-server'
-    dbName: 'ashu-app-postgres-db'
+    serverName: 'ashu-vnet-postgres-db-server'
+    dbName: 'ashu-vnet-postgres-db'
     vnetName: vnetName
     subnetName: subnetName
   }
