@@ -20,16 +20,8 @@ param containerAppName string = 'aca${appName}'
 
 var containerAppEnvVariables = [
   {
-    name: 'ASPNETCORE_ENVIRONMENT'
+    name: 'test.profile'
     value: 'Development'
-  }
-  {
-    name: 'SPRING_DATASOURCE_USERNAME'
-    value: dbUsername
-  }
-  {
-    name: 'SPRING_DATASOURCE_PASSWORD'
-    value: dbPassword
   }
   {
     name: 'SPRING_DATASOURCE_URL'
@@ -72,6 +64,14 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
         name: 'container-registry-password'
         value: acrPasswordSecret
       }
+      {
+        name: 'SPRING_DATASOURCE_USERNAME'
+        value: dbUsername
+      }
+      {
+        name: 'SPRING_DATASOURCE_PASSWORD'
+        value: dbPassword
+      }
     ]
     registries: [
       {
@@ -95,7 +95,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
     ]
     scale: {
       minReplicas: 1
-      maxReplicas: 10
+      maxReplicas: 2
     }
    }
   }
