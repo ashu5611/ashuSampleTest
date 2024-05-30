@@ -27,7 +27,7 @@ var tags = {
 }
 
 resource userIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' existing = {
-  name: 'ashuSampleTest-githubAction'
+  name: 'sampleapp-dev-github-action'
 }
 
 resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {

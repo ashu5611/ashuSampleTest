@@ -35,9 +35,10 @@ var tags = {
   LastDeployed: lastDeployed
 }
 
-resource userIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' existing = {
-  name: 'ashuSampleTest-githubAction'
+resource acrUserIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' existing = {
+  name: 'acr-pull-identity'
 }
+
 
 resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
   name: containerAppName
@@ -76,8 +77,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
     registries: [
       {
         server: acrServerName
-        username: acrUsername
-        passwordSecretRef: 'container-registry-password'
+        identity: acrUserIdentity.id
       }
     ]
    }
@@ -102,7 +102,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
   identity: {
     type: 'UserAssigned'
     userAssignedIdentities: {
-      '${userIdentity.id}': {}
+      '${acrUserIdentity.id}': {}
     }
   }
 }

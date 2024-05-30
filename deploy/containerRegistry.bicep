@@ -3,6 +3,7 @@ param location string
 param tags object
 param keyVaultName string
 var registryLoginServer = 'registry-login-server'
+var identityName = 'acr-pull-identity'
 
 @secure()
 param primaryPasswordSecret string
@@ -13,8 +14,9 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: keyVaultName
 }
 
-resource userIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' existing = {
-  name: 'ashuSampleTest-githubAction'
+resource identity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview'  = {
+  name: identityName
+  location: location
 }
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2022-02-01-preview' = {
@@ -30,8 +32,18 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2022-02-01-pr
   identity: {
     type: 'UserAssigned'
     userAssignedIdentities: {
-      '${userIdentity.id}': {}
+      '${identity.id}': {}
     }
+  }
+}
+
+resource acrRoleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
+  name: guid(resourceGroup().id, 'acrRoleAssignment')
+  scope: containerRegistry
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d')
+    principalId: identity.properties.principalId
+    principalType: 'ServicePrincipal'
   }
 }
 

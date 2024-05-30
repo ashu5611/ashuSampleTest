@@ -37,7 +37,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
         {
           name: '${subnetName}-subnet-delegation-app'
           properties: {
-            serviceName: 'Microsoft.App/containerApps'
+            serviceName: 'Microsoft.App/environments'
           }
         }
       ]
