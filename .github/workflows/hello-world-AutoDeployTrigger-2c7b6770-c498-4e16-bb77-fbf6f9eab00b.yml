@@ -15,6 +15,7 @@ env:
   appName: '235611'  
   secretNameRegistryUser : 'acr-username-shared-key'
   secretNameRegistryPassword : 'acr-password-shared-key'
+  resourceGroupName: 'ashu-rg'
 
 jobs:
   create-infra:
@@ -35,11 +36,11 @@ jobs:
           client-id: ${{ secrets.CLIENT_ID }}
           tenant-id: ${{ secrets.TENANT_ID }}
           subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
-      - name: deploy infra
+      - name: create resources
         uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
-          resourceGroupName: ashu-dev
+          resourceGroupName: ${{ env.resourceGroupName }}
           template: ./deploy/main.bicep
           parameters: dbUsername=${{ secrets.SQL_USERNAME }} dbPassword=${{ secrets.SQL_PASSWORD }} appName=${{ env.appName }} secretNameRegistryUser=${{ env.secretNameRegistryUser }} secretNameRegistryPassword=${{ env.secretNameRegistryPassword }}
           failOnStdErr: false
@@ -91,7 +92,7 @@ jobs:
         uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
-          resourceGroupName: ashu-rg
+          resourceGroupName: ${{ env.resourceGroupName }}
           template: ./deploy/deploy.bicep
           parameters: imageTag=${{ github.sha }}
           failOnStdErr: false
