@@ -86,6 +86,7 @@ module vnet 'virtualNetwork.bicep' = {
 
 module db 'postgresdb.bicep' =  {
   name: 'postgres-db'
+  dependsOn: [vnet]
   params: {
     dbUsername: dbUsername
     dbPassword: dbPassword
