@@ -18,17 +18,6 @@ param dbPassword string
 //container app
 param containerAppName string = 'aca${appName}'
 
-var containerAppEnvVariables = [
-  {
-    name: 'test.profile'
-    value: 'Development'
-  }
-  {
-    name: 'SPRING_DATASOURCE_URL'
-    value: 'jdbc:postgresql://ashu-vnet-postgres-db-server.postgres.database.azure.com:5432/ashu-vnet-postgres-db'
-  }
-
-]
 var tags = {
   ApplicationName: 'epicApp'
   Environment: 'Development'
@@ -66,12 +55,16 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
         value: acrPasswordSecret
       }
       {
-        name: 'SPRING_DATASOURCE_USERNAME'
+        name: 'spring-datasource-username'
         value: dbUsername
       }
       {
-        name: 'SPRING_DATASOURCE_PASSWORD'
+        name: 'spring-datasource-password'
         value: dbPassword
+      }
+      {
+        name: 'spring-datasource-url'
+        value: 'jdbc:postgresql://ashu-vnet-postgres-db-server.postgres.database.azure.com:5432/ashu-vnet-postgres-db'
       }
     ]
     registries: [
@@ -86,12 +79,30 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
       {
         name: containerAppName
         image: '${acrServerName}/epicapp:${imageTag}'
-        env: containerAppEnvVariables
+        env: [
+          {
+            name: 'SPRING_PROFILES_ACTIVE'
+            value: 'test'
+          }
+          { 
+            name: 'SPRING_DATASOURCE_USERNAME'
+            secretRef: 'spring-datasource-username'
+          }
+          {
+            name: 'SPRING_DATASOURCE_PASSWORD'
+            secretRef: 'spring-datasource-password'
+          }
+          {
+            name: 'SPRING_DATASOURCE_URL'
+            value: 'spring-datasource-url'
+          }
+        ]
         resources: {
           cpu: 1
           memory: '2.0Gi'
         }
       }
+    
     ]
     scale: {
       minReplicas: 1

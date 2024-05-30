@@ -3,7 +3,7 @@ param subnetName string
 param tags object
 param postgresServerName string
 
-resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
+resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-11-01'= {
   name: vnetName
   location: resourceGroup().location
   tags: tags
