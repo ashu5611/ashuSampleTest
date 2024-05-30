@@ -8,6 +8,7 @@ param lastDeployed string = utcNow('d')
 param dbUsername string
 @secure()
 param dbPassword string
+param dbConnectionString string
 
 //container app
 param containerAppName string = 'aca${appName}'
@@ -80,7 +81,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
           }
           {
             name: 'SPRING_DATASOURCE_URL'
-            value: 'jdbc:postgresql://ashu-vnet-postgres-db-server.postgres.database.azure.com:5432/ashu-vnet-postgres-db'
+            value: dbConnectionString
           }
         ]
         resources: {
