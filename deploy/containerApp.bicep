@@ -4,12 +4,6 @@ param containerAppEnvId string
 param acrServerName string
 param imageTag string
 param lastDeployed string = utcNow('d')
-
-@secure()
-param acrUsername string 
-@secure()
-param acrPasswordSecret string
-
 @secure()
 param dbUsername string
 @secure()
@@ -51,20 +45,12 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
     }
     secrets: [
       {
-        name: 'container-registry-password'
-        value: acrPasswordSecret
-      }
-      {
         name: 'spring-datasource-username'
         value: dbUsername
       }
       {
         name: 'spring-datasource-password'
         value: dbPassword
-      }
-      {
-        name: 'spring-datasource-url'
-        value: 'jdbc:postgresql://ashu-vnet-postgres-db-server.postgres.database.azure.com:5432/ashu-vnet-postgres-db'
       }
     ]
     registries: [
@@ -94,7 +80,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
           }
           {
             name: 'SPRING_DATASOURCE_URL'
-            secretRef: 'spring-datasource-url'
+            value: 'jdbc:postgresql://ashu-vnet-postgres-db-server.postgres.database.azure.com:5432/ashu-vnet-postgres-db'
           }
         ]
         resources: {

@@ -21,8 +21,6 @@ module containerApp 'containerApp.bicep' = {
   params: {
     containerAppEnvId: containerAppEnv.id
     acrServerName: containerRegistry.properties.loginServer
-    acrUsername: keyVault.getSecret('acr-username-shared-key')
-    acrPasswordSecret: keyVault.getSecret('acr-password-shared-key')
     imageTag: imageTag
     location: resourceGroup().location
     dbUsername: keyVault.getSecret('db-username')
