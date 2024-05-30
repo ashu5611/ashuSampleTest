@@ -1,6 +1,7 @@
 param vnetName string
 param subnetName string
-param tags object 
+param tags object
+param postgresServerName string
 
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
   name: vnetName
@@ -47,11 +48,11 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
 
 
 resource privateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' = {
-  name: 'ashu-vnet-postgres-db-server.private.postgres.database.azure.com'
+  name: '${postgresServerName}.private.postgres.database.azure.com'
   location: 'global'
 
   resource vnetLink 'virtualNetworkLinks' = {
-    name: 'ashu-vnet-postgres-db-server-link'
+    name: '${postgresServerName}-link'
     location: 'global'
     properties: {
       registrationEnabled: false

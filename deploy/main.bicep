@@ -19,6 +19,10 @@ param containerRegistryName string = 'acr${appName}'
 //container environment
 param containerEnvironmentName string = 'env${appName}'
 
+param postgresServerName string = 'ashu-vnet-postgres-db-server'
+
+param postgresDbName string = 'ashu-vnet-postgres-db'
+
 
 var tags = {
   ApplicationName: 'epicApp'
@@ -81,6 +85,7 @@ module vnet 'virtualNetwork.bicep' = {
     vnetName: vnetName
     tags: tags
     subnetName: subnetName
+    postgresServerName: postgresServerName
   }
 }
 
@@ -90,8 +95,8 @@ module db 'postgresdb.bicep' =  {
   params: {
     dbUsername: dbUsername
     dbPassword: dbPassword
-    serverName: 'ashu-vnet-postgres-db-server'
-    dbName: 'ashu-vnet-postgres-db'
+    postgresServerName: postgresServerName
+    postgresDbName: postgresDbName
     vnetName: vnetName
     subnetName: subnetName
   }
