@@ -8,6 +8,7 @@ param lastDeployed string = utcNow('d')
 param dbUsername string
 @secure()
 param dbPassword string
+
 param dbConnectionString string
 
 //container app
@@ -53,6 +54,10 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
         name: 'spring-datasource-password'
         value: dbPassword
       }
+      {
+        name: 'spring-datasource-url'
+        value: dbConnectionString
+      }
     ]
     registries: [
       {
@@ -81,7 +86,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
           }
           {
             name: 'SPRING_DATASOURCE_URL'
-            value: dbConnectionString
+            value: 'spring-datasource-url'
           }
         ]
         resources: {
