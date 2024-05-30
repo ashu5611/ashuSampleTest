@@ -94,7 +94,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
           }
           {
             name: 'SPRING_DATASOURCE_URL'
-            value: 'spring-datasource-url'
+            secretRef: 'spring-datasource-url'
           }
         ]
         resources: {
