@@ -29,7 +29,6 @@ resource env 'Microsoft.App/managedEnvironments@2024-03-01' = {
     vnetConfiguration: {
       internal: true
       infrastructureSubnetId: virtualNetwork::subnet.id
-    
     }
   }
 }
