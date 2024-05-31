@@ -10,7 +10,7 @@ param subnetName string
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' existing = {
   name: vnetName
   resource subnet 'subnets' existing = {
-    name: '${subnetName}-db'
+    name: '${subnetName}-app'
   
   }
 }
