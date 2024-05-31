@@ -31,12 +31,6 @@ resource env 'Microsoft.App/managedEnvironments@2024-03-01' = {
       infrastructureSubnetId: virtualNetwork::subnet.id
     
     }
-    workloadProfiles: [
-      {
-        name: 'Consumption'
-        workloadProfileType: 'Consumption'
-      }
-    ]
   }
 }
 
