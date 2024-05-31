@@ -121,6 +121,8 @@ module containerEnv 'containerAppEnvironment.bicep' = {
     logAnalyticsCustomerId: logAnalytics.outputs.customerId
     logAnalyticsSharedKey: keyVault.getSecret('law-shared-key')
     tags: tags
+    vnetName: vnetName
+    subnetName: subnetName
   }
 }
 
