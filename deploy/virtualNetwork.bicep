@@ -18,7 +18,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-11-01'= {
   resource databaseSubnet 'subnets' = {
     name: '${subnetName}-db'
     properties: {
-      addressPrefix: '10.0.1.0/24'
+      addressPrefix: '10.0.0.0/24'
       delegations: [
         {
           name: '${subnetName}-subnet-delegation-db'
@@ -33,7 +33,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-11-01'= {
   resource containerAppSubnet 'subnets' = {
     name: '${subnetName}-app'
     properties: {
-      addressPrefix: '10.0.0.0/23'
+      addressPrefix: '10.0.2.0/23'
       delegations: [
         {
           name: '${subnetName}-subnet-delegation-app'
