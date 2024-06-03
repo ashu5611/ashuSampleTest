@@ -12,11 +12,10 @@ param postgresServerName string
 param postgresDbName string
 
 
-resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' existing = {
+resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-11-01' existing = {
   name: vnetName
   resource subnet 'subnets' existing = {
     name: '${subnetName}-db'
-  
   }
 }
 
@@ -59,39 +58,14 @@ resource postgresDb 'Microsoft.DBforPostgreSQL/flexibleServers/databases@2022-12
   parent: postgresServer
 }
 
-
-@description('Private Endpoint for PostgreSQL')
-resource privateEndpoint 'Microsoft.Network/privateEndpoints@2021-05-01' = {
-  name: 'myPostgresPrivateEndpoint'
-  location: resourceGroup().location
+resource privateDnsZoneLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2020-06-01' = {
+  parent: privateDnsZone
+  name: '${postgresServerName}-link'
+  location: 'global'
   properties: {
-    subnet: {
-      id: virtualNetwork::subnet.id
+    registrationEnabled: false
+    virtualNetwork: {
+      id: virtualNetwork.id
     }
-    privateLinkServiceConnections: [
-      {
-        name: 'postgresConnection'
-        properties: {
-          privateLinkServiceId: postgresServer.id
-          groupIds: ['postgresqlServer']
-        }
-      }
-    ]
-  }
-}
-
-// DNS Zone Group
-resource privateDnsZoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2023-11-01' = {
-  name: 'myPostgresPrivateDnsZoneGroup'
-  parent: privateEndpoint
-  properties: {
-    privateDnsZoneConfigs: [
-      {
-        name: 'zoneConfig'
-        properties: {
-          privateDnsZoneId: privateDnsZone.id
-        }
-      }
-    ]
   }
 }
