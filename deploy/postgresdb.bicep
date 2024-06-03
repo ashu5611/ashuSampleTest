@@ -12,10 +12,6 @@ param postgresServerName string
 param postgresDbName string
 
 
-resource privateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' existing = {
-  name: '${postgresServerName}.private.postgres.database.azure.com'
-}
-
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' existing = {
   name: vnetName
   resource subnet 'subnets' existing = {
@@ -37,7 +33,6 @@ resource postgresServer 'Microsoft.DBforPostgreSQL/flexibleServers@2021-06-01' =
     administratorLoginPassword: dbPassword
     network: {
       delegatedSubnetResourceId: virtualNetwork::subnet.id
-      privateDnsZoneArmResourceId: privateDnsZone.id
     }
     highAvailability: {
       mode: haMode
@@ -73,6 +68,27 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2021-05-01' = {
         properties: {
           privateLinkServiceId: postgresServer.id
           groupIds: ['postgresqlServer']
+        }
+      }
+    ]
+  }
+}
+
+resource privateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' = {
+  name: '${postgresServerName}.postgres.database.azure.com'
+  location: resourceGroup().location
+}
+
+// DNS Zone Group
+resource privateDnsZoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2023-11-01' = {
+  name: 'myPostgresPrivateDnsZoneGroup'
+  parent: privateEndpoint
+  properties: {
+    privateDnsZoneConfigs: [
+      {
+        name: 'zoneConfig'
+        properties: {
+          privateDnsZoneId: privateDnsZone.id
         }
       }
     ]

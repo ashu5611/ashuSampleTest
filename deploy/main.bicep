@@ -85,7 +85,6 @@ module vnet 'virtualNetwork.bicep' = {
     vnetName: vnetName
     tags: tags
     subnetName: subnetName
-    postgresServerName: postgresServerName
   }
 }
 
