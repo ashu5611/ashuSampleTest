@@ -114,7 +114,7 @@ module logAnalytics 'logAnalytics.bicep' = {
 
 module containerEnv 'containerAppEnvironment.bicep' = {
   name: 'container-app-env'
-  dependsOn: [vnet]
+  dependsOn: [vnet, db]
   params: {
     containerEnvironmentName: containerEnvironmentName
     location: location
