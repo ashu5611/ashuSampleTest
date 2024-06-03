@@ -33,14 +33,6 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-11-01'= {
     name: '${subnetName}-app'
     properties: {
       addressPrefix: '10.0.2.0/23'
-      delegations: [
-        {
-          name: '${subnetName}-subnet-delegation-app'
-          properties: {
-            serviceName: 'Microsoft.App/environments'
-          }
-        }
-      ]
     }
   }
 }
