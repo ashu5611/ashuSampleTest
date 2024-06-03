@@ -22,7 +22,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' existing 
 
 resource privateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' = {
   name: '${postgresServerName}.postgres.database.azure.com'
-  location: resourceGroup().location
+  location: 'global'
 }
 
 resource postgresServer 'Microsoft.DBforPostgreSQL/flexibleServers@2021-06-01' = {
