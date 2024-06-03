@@ -25,6 +25,6 @@ module containerApp 'containerApp.bicep' = {
     location: resourceGroup().location
     dbUsername: keyVault.getSecret('db-username')
     dbPassword: keyVault.getSecret('db-password')
-    dbConnectionString: 'jdbc:postgresql://ashu-vnet-postgres-db-server.postgres.database.azure.com:5432/ashu-vnet-postgres-db'
+    dbConnectionString: 'jdbc:postgresql://ashu-vnet-postgres-db-server.privatelink.postgres.database.azure.com:5432/ashu-vnet-postgres-db'
   }
 }

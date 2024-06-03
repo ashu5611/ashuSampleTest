@@ -58,3 +58,23 @@ resource postgresDb 'Microsoft.DBforPostgreSQL/flexibleServers/databases@2022-12
   parent: postgresServer
 }
 
+
+@description('Private Endpoint for PostgreSQL')
+resource privateEndpoint 'Microsoft.Network/privateEndpoints@2021-05-01' = {
+  name: 'myPostgresPrivateEndpoint'
+  location: resourceGroup().location
+  properties: {
+    subnet: {
+      id: virtualNetwork::subnet.id
+    }
+    privateLinkServiceConnections: [
+      {
+        name: 'postgresConnection'
+        properties: {
+          privateLinkServiceId: postgresServer.id
+          groupIds: ['postgresqlServer']
+        }
+      }
+    ]
+  }
+}
