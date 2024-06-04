@@ -18,19 +18,6 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-11-01'= {
     name: '${subnetName}-db'
     properties: {
       addressPrefix: '10.0.0.0/24'
-      serviceEndpoints: [
-        {
-          service: 'Microsoft.Storage'
-        }
-      ]
-      delegations: [
-        {
-          name: '${subnetName}-subnet-delegation-db'
-          properties: {
-            serviceName: 'Microsoft.DBforPostgreSQL/flexibleServers'
-          }
-        }
-      ]
     }
   }
 
@@ -38,6 +25,14 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-11-01'= {
     name: '${subnetName}-app'
     properties: {
       addressPrefix: '10.0.2.0/23'
+      delegations: [
+        {
+          name: '${subnetName}-app'
+          properties: {
+            serviceName: 'Microsoft.App/environments'
+          }
+        }
+      ]
     }
     
   }

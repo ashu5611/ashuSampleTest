@@ -37,23 +37,29 @@ resource privateDnsZoneLink 'Microsoft.Network/privateDnsZones/virtualNetworkLin
   }
 }
 
-resource postgresServer 'Microsoft.DBforPostgreSQL/flexibleServers@2021-06-01' = {
+resource postgresServer 'Microsoft.DBforPostgreSQL/flexibleServers@2023-12-01-preview' = {
   name: postgresServerName
   location: resourceGroup().location
   sku: {
     name: dbInstanceType
     tier: serverEdition
   }
+  
   properties: {
     version: version
     administratorLogin: dbUsername
     administratorLoginPassword: dbPassword
     network: {
-      delegatedSubnetResourceId: virtualNetwork::subnet.id
       privateDnsZoneArmResourceId: privateDnsZone.id
+      publicNetworkAccess: 'Disabled'
+    }
+    authConfig: {
+      activeDirectoryAuth: 'Enabled' 
+      passwordAuth: 'Disabled'
+      tenantId: tenant().tenantId
     }
     highAvailability: {
-      mode: haMode
+      mode: 'Disabled'
     }
 
     storage: {
@@ -69,4 +75,40 @@ resource postgresServer 'Microsoft.DBforPostgreSQL/flexibleServers@2021-06-01' =
 resource postgresDb 'Microsoft.DBforPostgreSQL/flexibleServers/databases@2022-12-01' = {
   name: postgresDbName
   parent: postgresServer
+}
+
+resource postgresqlDbServerPrivateEndpoint 'Microsoft.Network/privateEndpoints@2023-11-01' = {
+  name: '${postgresServerName}-endpoint'
+  location: resourceGroup().location
+  properties: {
+    subnet: {
+      id: virtualNetwork::subnet.id
+    }
+    privateLinkServiceConnections: [
+      {
+        name: '${postgresServerName}-connection'
+        properties: {
+          privateLinkServiceId: postgresServer.id
+          groupIds: [
+            'postgresqlServer'
+          ]
+          requestMessage: 'Please approve connection'
+        }
+      }
+    ]
+  }
+}
+resource postgresqlDbServerPrivateEndpointDnsZoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2023-11-01' = {
+  name: 'default'
+  parent: postgresqlDbServerPrivateEndpoint
+  properties: {
+    privateDnsZoneConfigs: [
+      {
+        name: 'zoneConfig'
+        properties: {
+          privateDnsZoneId: privateDnsZone.id
+        }
+      }
+    ]
+  }
 }
