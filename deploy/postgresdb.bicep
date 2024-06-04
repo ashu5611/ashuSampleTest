@@ -38,6 +38,9 @@ resource privateDnsZoneLink 'Microsoft.Network/privateDnsZones/virtualNetworkLin
 }
 
 resource postgresServer 'Microsoft.DBforPostgreSQL/flexibleServers@2023-12-01-preview' = {
+  dependsOn: [
+    privateDnsZoneLink
+  ]
   name: postgresServerName
   location: resourceGroup().location
   sku: {
