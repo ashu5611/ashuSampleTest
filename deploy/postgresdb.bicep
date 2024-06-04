@@ -6,42 +6,16 @@ param skuSizeGB int = 32
 param dbInstanceType string = 'Standard_B1ms'
 param haMode string = 'Disabled'
 param version string = '12'
-param subnetName string 
-param vnetName string
 param postgresServerName string
 param postgresDbName string
+param dnsZoneId string
+param subnetId string
 
 
-resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-11-01' existing = {
-  name: vnetName
-  resource subnet 'subnets' existing = {
-    name: '${subnetName}-db'
-  }
-}
-
-resource privateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' = {
-  name: '${postgresServerName}.private.postgres.database.azure.com'
-  location: 'global'
-}
-output privateDnsZoneId string = privateDnsZone.id
-
-resource privateDnsZoneLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2020-06-01' = {
-  parent: privateDnsZone
-  name: '${postgresServerName}-link'
-  location: 'global'
-  properties: {
-    registrationEnabled: false
-    virtualNetwork: {
-      id: virtualNetwork.id
-    }
-  }
-}
 
 
 resource postgresServer 'Microsoft.DBforPostgreSQL/flexibleServers@2023-12-01-preview' = {
-  dependsOn: [
-      privateDnsZoneLink
-  ]
+
   name: postgresServerName
   location: resourceGroup().location
   sku: {
@@ -54,7 +28,7 @@ resource postgresServer 'Microsoft.DBforPostgreSQL/flexibleServers@2023-12-01-pr
     administratorLogin: dbUsername
     administratorLoginPassword: dbPassword
     network: {
-      privateDnsZoneArmResourceId: privateDnsZone.id
+      privateDnsZoneArmResourceId: dnsZoneId
       publicNetworkAccess: 'Disabled'
     }
     authConfig: {
@@ -63,7 +37,7 @@ resource postgresServer 'Microsoft.DBforPostgreSQL/flexibleServers@2023-12-01-pr
       tenantId: tenant().tenantId
     }
     highAvailability: {
-      mode: 'Disabled'
+      mode: haMode
     }
 
     storage: {
@@ -86,7 +60,7 @@ resource postgresqlDbServerPrivateEndpoint 'Microsoft.Network/privateEndpoints@2
   location: resourceGroup().location
   properties: {
     subnet: {
-      id: virtualNetwork::subnet.id
+      id: subnetId
     }
     privateLinkServiceConnections: [
       {
@@ -110,7 +84,7 @@ resource postgresqlDbServerPrivateEndpointDnsZoneGroup 'Microsoft.Network/privat
       {
         name: 'zoneConfig'
         properties: {
-          privateDnsZoneId: privateDnsZone.id
+          privateDnsZoneId: dnsZoneId
         }
       }
     ]

@@ -85,6 +85,7 @@ module vnet 'virtualNetwork.bicep' = {
     vnetName: vnetName
     tags: tags
     subnetName: subnetName
+    postgresServerName: postgresServerName
   }
 }
 
@@ -96,8 +97,8 @@ module db 'postgresdb.bicep' =  {
     dbPassword: dbPassword
     postgresServerName: postgresServerName
     postgresDbName: postgresDbName
-    vnetName: vnetName
-    subnetName: subnetName
+    dnsZoneId: vnet.outputs.privateDnsZoneId
+    subnetId: vnet.outputs.subnetId
   }
 }
 //module invocations:

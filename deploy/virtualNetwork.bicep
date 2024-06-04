@@ -1,6 +1,7 @@
 param vnetName string
 param subnetName string
 param tags object
+param postgresServerName string
 
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-11-01'= {
   name: vnetName
@@ -20,7 +21,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-11-01'= {
       addressPrefix: '10.0.0.0/24'
       delegations: [
         {
-          name: '${subnetName}-dv'
+          name: '${subnetName}-delegation-db'
           properties: {
             serviceName: 'Microsoft.DBforPostgreSQL/flexibleServers'
           }
@@ -35,7 +36,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-11-01'= {
       addressPrefix: '10.0.2.0/23'
       delegations: [
         {
-          name: '${subnetName}-app'
+          name: '${subnetName}-delegation-app'
           properties: {
             serviceName: 'Microsoft.App/environments'
           }
@@ -45,4 +46,22 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-11-01'= {
     
   }
 }
+resource privateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' = {
+  name: '${postgresServerName}.private.postgres.database.azure.com'
+  location: 'global'
 
+  resource vnetLink 'virtualNetworkLinks' = {
+    name: '${postgresServerName}-link'
+    location: 'global'
+    properties: {
+      registrationEnabled: false
+      virtualNetwork: {
+        id: virtualNetwork.id
+      }
+    }
+  }
+}
+
+output vnetId string = virtualNetwork.id
+output privateDnsZoneId string = privateDnsZone.id
+output subnetId string = virtualNetwork::databaseSubnet.id
