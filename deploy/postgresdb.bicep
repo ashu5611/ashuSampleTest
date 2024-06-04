@@ -23,7 +23,7 @@ resource privateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' = {
   name: '${postgresServerName}.private.postgres.database.azure.com'
   location: 'global'
 }
-
+output privateDnsZoneId string = privateDnsZone.id
 
 resource privateDnsZoneLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2020-06-01' = {
   parent: privateDnsZone
@@ -37,9 +37,10 @@ resource privateDnsZoneLink 'Microsoft.Network/privateDnsZones/virtualNetworkLin
   }
 }
 
+
 resource postgresServer 'Microsoft.DBforPostgreSQL/flexibleServers@2023-12-01-preview' = {
   dependsOn: [
-    privateDnsZoneLink
+      privateDnsZoneLink
   ]
   name: postgresServerName
   location: resourceGroup().location
