@@ -19,6 +19,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-11-01'= {
     name: '${subnetName}-db'
     properties: {
       addressPrefix: '10.0.0.0/24'
+      privateEndpointNetworkPolicies: 'Disabled' // Required for private link
       delegations: [
         {
           name: '${subnetName}-delegation-db'
