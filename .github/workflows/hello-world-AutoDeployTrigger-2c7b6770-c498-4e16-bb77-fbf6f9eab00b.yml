@@ -15,7 +15,7 @@ env:
   appName: '235611'  
   secretNameRegistryUser : 'acr-username-shared-key'
   secretNameRegistryPassword : 'acr-password-shared-key'
-  resourceGroupName: 'ashu-dev'
+  resourceGroupName: 'ashu-dev-new'
 
 jobs:
   create-infra:
