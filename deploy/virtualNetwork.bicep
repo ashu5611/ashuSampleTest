@@ -50,6 +50,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-11-01'= {
 resource privateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' = {
   name: '${postgresServerName}.privatelink.postgres.database.azure.com'
   location: 'global'
+  dependsOn: [virtualNetwork]
 
   resource vnetLink 'virtualNetworkLinks' = {
     name: '${postgresServerName}-link'
