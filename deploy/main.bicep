@@ -30,7 +30,7 @@ var tags = {
   LastDeployed: lastDeployed
 }
 
-resource userIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' existing = {
+resource userIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
   name: 'rg-identity'
   location: location
 }
