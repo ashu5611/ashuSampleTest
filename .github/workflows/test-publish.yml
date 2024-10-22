@@ -28,6 +28,7 @@ jobs:
             echo "apiSpec.yaml has changed."
           else
             echo "No changes in apiSpec.yaml."
+          fi
 
   get-env-name:
     name: Get Environment Name
