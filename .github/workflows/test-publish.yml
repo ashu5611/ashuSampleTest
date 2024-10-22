@@ -11,6 +11,7 @@ env:
   ONBOARDING_URL: "${{ vars.ONBOARDING_URL || '' }}"
   API_TYPE: "${{ vars.API_TYPE || 'rest' }}"
   CATALOG_TYPE: "${{ vars.CATALOG_TYPE || 'business' }}"
+  
 jobs:
   check-file-changes:
     name: Check if apiSpec.yaml has changed
@@ -47,7 +48,7 @@ jobs:
         id: env-name
         run: |
           echo "github.ref_name = ${{ github.ref_name }}"
-          if contains(github.ref_name, 'feature/'); then
+          if [[ "${{ github.ref }}" == refs/heads/feature* ]]; then
             echo "::set-output name=env::dev"
           else
             echo "::set-output name=env::${{ fromJSON('{ "develop":"qa", "main":"prod"}')[github.ref_name] }}"
