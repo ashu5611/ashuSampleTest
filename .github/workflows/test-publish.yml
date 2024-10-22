@@ -3,16 +3,6 @@ on:
   push:
     paths:
       - 'openapi/**'
-  workflow_dispatch:
-    inputs:
-      env:
-        type: choice
-        description: Which ENV to publish ?
-        options:
-          - "dev"
-          - "qa"
-          - "ppe"
-          - "prod"
 env:
   GITHUB_RAW_URL: "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref }}/openapi/apiSpec.yaml"
   ARCHITECTURE_AREA: "${{ vars.ARCHITECTURE_AREA  }}"
