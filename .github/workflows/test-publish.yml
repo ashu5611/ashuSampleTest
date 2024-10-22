@@ -25,14 +25,15 @@ jobs:
         id: check-changes
         run: |
           if git diff --name-only HEAD^ HEAD | grep -q "openapi/apispec.yaml"; then
-            echo "apiSpec.yaml has changed."
+            echo "true"
           else
-            echo "No changes in apiSpec.yaml."
+            echo "false"
           fi
 
   get-env-name:
     name: Get Environment Name
     needs: [check-file-changes]
+    if: ${{ needs.check-file-changes.outputs.check-changes == 'true' }}
     outputs:
       env-name: ${{ steps.env-name.outputs.env }}
     runs-on: ubuntu-latest
@@ -41,13 +42,10 @@ jobs:
         id: env-name
         run: |
           echo "github.ref_name: ${{ github.ref_name }}"
-          if [[ "${{ github.ref_name }}" == feature/* ]]; then
+          if contains(github.ref_name, 'feature/'); then
             echo "::set-output name=env::dev"
           else
             echo "::set-output name=env::${{ fromJSON('{ "develop":"qa", "main":"prod"}')[github.ref_name] }}"
-          fi
-          if [ -z "$env" ]; then
-            echo "::set-output name=env::${{ github.event.inputs.env }} "
           fi
         
   publish-oas-job:
