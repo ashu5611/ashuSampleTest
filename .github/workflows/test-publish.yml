@@ -5,6 +5,18 @@ on:
       - develop
       - feature/*
       - main
+    
+  workflow_dispatch:
+    inputs:
+      env:
+        description: 'Environment to publish the API to'
+        required: true
+        type: choice
+        options:
+          - dev
+          - qa
+          - prod
+        default: 'dev'
 env:
   GITHUB_RAW_URL: "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref }}/openapi/apiSpec.yaml"
   ARCHITECTURE_AREA: "${{ vars.ARCHITECTURE_AREA  }}"
@@ -48,11 +60,12 @@ jobs:
         id: env-name
         run: |
           echo "github.ref_name = ${{ github.ref_name }}"
-          if [[ "${{ github.ref }}" == feature* ]]; then
+          if [[ "${{ github.ref }}" == refs/heads/feature* ]]; then
             echo "::set-output name=env::dev"
           else
             echo "::set-output name=env::${{ fromJSON('{ "develop":"qa", "main":"prod"}')[github.ref_name] }}"
           fi
+          echo "env-name = ${{ steps.env-name.outputs.env }}"
         
   publish-oas-job:
     name: "Publish OAS to API Catalog Job"
