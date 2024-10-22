@@ -24,7 +24,7 @@ jobs:
       - name: Check for Changes in apiSpec.yaml
         id: check-changes
         run: |
-          if git diff --name-only HEAD^ HEAD | grep -q "openapi/apiSpec.yaml"; then
+          if git diff --name-only HEAD^ HEAD | grep -q "openapi/apispec.yaml"; then
             echo "apiSpec.yaml has changed."
           else
             echo "No changes in apiSpec.yaml."
