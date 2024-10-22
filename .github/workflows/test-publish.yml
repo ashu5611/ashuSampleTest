@@ -33,12 +33,7 @@ jobs:
   get-env-name:
     name: Get Environment Name
     needs: [check-file-changes]
-    if:
-      contains('
-      refs/heads/develop
-      refs/heads/release/r1
-      refs/heads/main
-      ', github.ref)
+    if: ${{ needs.check-file-changes.outputs.check-changes == 'apiSpec.yaml has changed.' }}
     outputs:
       env-name: ${{ steps.env-name.outputs.env }}
     runs-on: ubuntu-latest
