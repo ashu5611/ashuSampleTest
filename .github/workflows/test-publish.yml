@@ -1,0 +1,93 @@
+name: Publish OAS to API Catalog
+on:
+  push:
+    paths:
+      - 'openapi/**'
+  workflow_dispatch:
+    inputs:
+      env:
+        type: choice
+        description: Which ENV to publish ?
+        options:
+          - "dev"
+          - "qa"
+          - "ppe"
+          - "prod"
+env:
+  GITHUB_RAW_URL: "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref }}/openapi/apiSpec.yaml"
+  ARCHITECTURE_AREA: "${{ vars.ARCHITECTURE_AREA  }}"
+  ONBOARDING_URL: "${{ vars.ONBOARDING_URL || '' }}"
+  API_TYPE: "${{ vars.API_TYPE || 'rest' }}"
+  CATALOG_TYPE: "${{ vars.CATALOG_TYPE || 'business' }}"
+jobs:
+  get-env-name:
+    if:
+      contains('
+      refs/heads/develop
+      refs/heads/release/r1
+      refs/heads/main
+      ', github.ref)
+    outputs:
+      env-name: ${{ steps.env-name.outputs.env }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Environment Name
+        id: env-name
+        run: |
+          echo "github.ref_name: ${{ github.ref_name }}"
+          if [[ "${{ github.ref_name }}" == feature/* ]]; then
+            echo "::set-output name=env::dev"
+          else
+            echo "::set-output name=env::${{ fromJSON('{ "develop":"qa", "main":"prod"}')[github.ref_name] }}"
+          fi
+          if [ -z "$env" ]; then
+            echo "::set-output name=env::${{ github.event.inputs.env }} "
+          fi
+  publish-oas-job:
+    name: "Publish OAS to API Catalog Job"
+
+    runs-on: ubuntu-latest
+    needs: [ get-env-name ]
+    steps:
+      - name: Get Oauth Token Step
+        id: get-oauth-token
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: "${{ secrets.AUTH_URL }}"
+          method: POST
+          maskResponse: true
+          customHeaders: '{"Content-Type": "application/x-www-form-urlencoded"}'
+          data: '{ "grant_type": "client_credentials",
+                    "scope":"${{ secrets.SCOPE }}",
+                    "client_id":"${{ secrets.CLIENT_ID }}",
+                    "client_secret":"${{ secrets.CLIENT_SECRET }}" 
+                  }'
+      - name: Extract and Mask Token Step
+        id: extract-token-var
+        run: |
+          AUTH_TOKEN=${{ fromJson(steps.get-oauth-token.outputs.response).access_token }}
+          echo "::add-mask::$AUTH_TOKEN" 
+          echo "AUTH_TOKEN=$AUTH_TOKEN" >> "$GITHUB_OUTPUT"
+      - name: Publish OAS to API Catalog Step
+        id: publish-oas
+        continue-on-error: true
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: "${{ vars.API_URL }}"
+          preventFailureOnNoResponse: true
+          method: POST
+          customHeaders: '{"Content-Type": "application/json", "Authorization": "${{steps.extract-token-var.outputs.AUTH_TOKEN}}" }'
+          data: '{
+                    "githubRawUrl": "${{ env.GITHUB_RAW_URL }}",
+                    "env": "${{ needs.get-env-name.outputs.env-name }}",
+                    "architectureArea": "${{ env.ARCHITECTURE_AREA }}",
+                    "isPrivate": "false",
+                    "catalogType": "${{ env.CATALOG_TYPE }}",
+                    "apiType": "${{ env.API_TYPE }}",
+                    "onboardingUrl": "${{ env.ONBOARDING_URL }}"
+                  }'
+      - name: Publish Job Status
+        id: get-job-status
+        run: | 
+              echo "StatusCode : ${{ fromJson(steps.publish-oas.outputs.requestError).code }}" 
+             
