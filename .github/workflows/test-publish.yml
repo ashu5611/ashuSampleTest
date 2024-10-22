@@ -46,8 +46,8 @@ jobs:
       - name: Setup Environment Name
         id: env-name
         run: |
-          echo "github.ref_name: ${{ github.ref_name }}"
-          if contains({{ github.ref_name }}, 'feature/'); then
+          echo "github.ref_name = ${{ github.ref_name }}"
+          if contains(github.ref_name, 'feature/'); then
             echo "::set-output name=env::dev"
           else
             echo "::set-output name=env::${{ fromJSON('{ "develop":"qa", "main":"prod"}')[github.ref_name] }}"
