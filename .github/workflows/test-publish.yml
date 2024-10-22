@@ -93,8 +93,4 @@ jobs:
                     "apiType": "${{ env.API_TYPE }}",
                     "onboardingUrl": "${{ env.ONBOARDING_URL }}"
                   }'
-      - name: Publish Job Status
-        id: get-job-status
-        run: | 
-              echo "StatusCode : ${{ fromJson(steps.publish-oas.outputs.requestError).code }}" 
              
