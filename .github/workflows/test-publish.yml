@@ -28,11 +28,10 @@ jobs:
             echo "apiSpec.yaml has changed."
           else
             echo "No changes in apiSpec.yaml."
-            exit 1
 
   get-env-name:
     name: Get Environment Name
-    needs: check-file-changes
+    needs: [check-file-changes]
     if:
       contains('
       refs/heads/develop
