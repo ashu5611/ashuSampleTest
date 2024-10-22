@@ -77,11 +77,9 @@ jobs:
           echo "AUTH_TOKEN=$AUTH_TOKEN" >> "$GITHUB_OUTPUT"
       - name: Publish OAS to API Catalog Step
         id: publish-oas
-        continue-on-error: true
         uses: fjogeleit/http-request-action@v1
         with:
           url: "${{ vars.API_URL }}"
-          preventFailureOnNoResponse: true
           method: POST
           customHeaders: '{"Content-Type": "application/json", "Authorization": "${{steps.extract-token-var.outputs.AUTH_TOKEN}}" }'
           data: '{
