@@ -65,7 +65,8 @@ jobs:
           else
             echo "::set-output name=env::${{ fromJSON('{ "develop":"qa", "main":"prod"}')[github.ref_name] }}"
           fi
-          echo "env-name = ${{ steps.env-name.outputs.env }}"
+      - name: Print Environment Name
+        run: echo "Environment to publish is :${{ steps.env-name.outputs.env }}"
         
   publish-oas-job:
     name: "Publish OAS to API Catalog Job"
