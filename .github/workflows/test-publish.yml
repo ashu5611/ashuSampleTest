@@ -38,15 +38,15 @@ jobs:
           if [[ "${{ github.ref }}" == refs/heads/feature* ]]; then
             echo "::set-output name=ENVIRONMENT::dev"
           else
-            echo "::set-output name=ENVIRONMENT::${{ fromJSON('{ "develop":"qa", "main":"prod"}')[github.ref_name] }}"
+            echo "::set-output name=env::${{ fromJSON('{ "develop":"qa", "main":"prod"}')[github.ref_name] }}"
           fi
           if [ -z "$env" ]; then
-            echo "::set-output name=ENVIRONMENT::dev }}"
+            echo "::set-output name=env::dev }}"
           fi
       - name: Set Environment Name
         if: github.event_name == 'workflow_dispatch'
         run: |
-          echo "::set-output name=ENVIRONMENT::${{ github.event.inputs.environment }}"
+          echo "::set-output name=env::${{ github.event.inputs.environment }}"
       - name: Print Environment Name
         run: |
             echo "Environment to publish is :${{ steps.env-name.outputs.env }}"
