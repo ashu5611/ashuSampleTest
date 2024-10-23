@@ -27,9 +27,6 @@ env:
 jobs:
   prepare-parameter-job:
     name: Get Environment Name
-    if: github.event_name != 'workflow_dispatch'
-    outputs:
-      env-name: ${{ steps.env-name.outputs.env }}
     runs-on: ubuntu-latest
     steps:
       - name: Setup Environment Name
@@ -38,14 +35,15 @@ jobs:
           echo "github.ref_name = ${{ github.ref_name }}"
           if [[ "${{ github.ref }}" == refs/heads/feature* ]]; then
             echo "::set-env name=ENVIRONMENT::qa"
-            echo "::set-output name=env::dev"
+            echo "::set-output name=ENVIRONMENT::dev"
           else
-            echo "::set-output name=env::${{ fromJSON('{ "develop":"qa", "main":"prod"}')[github.ref_name] }}"
+            echo "::set-env name=ENVIRONMENT::${{ fromJSON('{ "develop":"qa", "main":"prod"}')[github.ref_name] }}"
           fi
           if [ -z "$env" ]; then
-            echo "::set-output name=env::${{ github.event.inputs.env }} "
+            echo "::set-env name=ENVIRONMENT::dev }}"
           fi
       - name: Set Environment Name
+        if: github.event_name == 'workflow_dispatch'
         run: |
           echo "::set-env name=ENVIRONMENT::${{ github.event.inputs.env }}"
       - name: Print Environment Name
