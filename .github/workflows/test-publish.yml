@@ -27,6 +27,7 @@ env:
 jobs:
   prepare-parameter-job:
     name: Get Environment Name
+    if: github.event_name != 'workflow_dispatch'
     outputs:
       env-name: ${{ steps.env-name.outputs.env }}
     runs-on: ubuntu-latest
@@ -36,7 +37,7 @@ jobs:
         run: |
           echo "github.ref_name = ${{ github.ref_name }}"
           if [[ "${{ github.ref }}" == refs/heads/feature* ]]; then
-            env.ENVIRONMENT="qa"
+            echo "::set-env name=ENVIRONMENT::qa"
             echo "::set-output name=env::dev"
           else
             echo "::set-output name=env::${{ fromJSON('{ "develop":"qa", "main":"prod"}')[github.ref_name] }}"
@@ -47,7 +48,7 @@ jobs:
       - name: Print Environment Name
         run: |
             echo "Environment to publish is :${{ steps.env-name.outputs.env }}"
-            echo "Environment evaluated is : "${{ env.GITHUB_RAW_URL }}","
+            echo "Environment evaluated is : "${{ env.ENVIRONMENT }}","
   publish-oas-job:
     name: "Publish Api"
     runs-on: ubuntu-latest
