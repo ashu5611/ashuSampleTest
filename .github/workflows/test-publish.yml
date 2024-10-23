@@ -22,9 +22,10 @@ env:
   ONBOARDING_URL: "${{ vars.ONBOARDING_URL || '' }}"
   API_TYPE: "${{ vars.API_TYPE || 'rest' }}"
   CATALOG_TYPE: "${{ vars.CATALOG_TYPE || 'business' }}"
+  ENVIRONMENT: "dev"
   
 jobs:
-  get-env-name:
+  prepare-parameter-job:
     name: Get Environment Name
     outputs:
       env-name: ${{ steps.env-name.outputs.env }}
@@ -35,6 +36,7 @@ jobs:
         run: |
           echo "github.ref_name = ${{ github.ref_name }}"
           if [[ "${{ github.ref }}" == refs/heads/feature* ]]; then
+            env.ENVIRONMENT="qa"
             echo "::set-output name=env::dev"
           else
             echo "::set-output name=env::${{ fromJSON('{ "develop":"qa", "main":"prod"}')[github.ref_name] }}"
@@ -43,12 +45,13 @@ jobs:
             echo "::set-output name=env::${{ github.event.inputs.env }} "
           fi
       - name: Print Environment Name
-        run: echo "Environment to publish is :${{ steps.env-name.outputs.env }}"
-        
+        run: |
+            echo "Environment to publish is :${{ steps.env-name.outputs.env }}"
+            echo "Environment evaluated is : "${{ env.GITHUB_RAW_URL }}","
   publish-oas-job:
     name: "Publish Api"
     runs-on: ubuntu-latest
-    needs: [ get-env-name ]
+    needs: [ prepare-parameter-job ]
     steps:
       - name: Get Oauth Token Step
         id: get-oauth-token
