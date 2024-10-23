@@ -6,7 +6,7 @@ on:
 
   workflow_dispatch:
     inputs:
-      env:
+      environment:
         description: 'Environment to publish the API to'
         required: true
         type: choice
@@ -45,6 +45,9 @@ jobs:
           if [ -z "$env" ]; then
             echo "::set-output name=env::${{ github.event.inputs.env }} "
           fi
+      - name: Set Environment Name
+        run: |
+          echo "::set-env name=ENVIRONMENT::${{ github.event.inputs.env }}"
       - name: Print Environment Name
         run: |
             echo "Environment to publish is :${{ steps.env-name.outputs.env }}"
@@ -82,7 +85,7 @@ jobs:
           customHeaders: '{"Content-Type": "application/json", "Authorization": "${{steps.extract-token-var.outputs.AUTH_TOKEN}}" }'
           data: '{
                     "githubRawUrl": "${{ env.GITHUB_RAW_URL }}",
-                    "env": "${{ needs.get-env-name.outputs.env-name }}",
+                    "env": "${{ env.ENVIRONMENT }}",
                     "architectureArea": "${{ env.ARCHITECTURE_AREA }}",
                     "isPrivate": "false",
                     "catalogType": "${{ env.CATALOG_TYPE }}",
