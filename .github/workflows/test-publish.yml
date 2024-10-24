@@ -29,7 +29,7 @@ jobs:
     name: Get Environment Name
     runs-on: ubuntu-latest
     outputs:
-      env-name: ${{ steps.env-name.outputs.env }}
+      env-name: ${{ steps.get-env.outputs.env }}
     steps:
       - name: Set Environment Name for Dispatch
         if: github.event_name != 'workflow_dispatch'
@@ -41,6 +41,10 @@ jobs:
             echo "::set-output name=env::dev"
           else
             echo "::set-output name=env::${{ fromJSON('{ "develop":"qa", "main":"prod"}')[github.ref_name] }}"
+          fi
+          if [ -z "${{ steps.get-env.outputs.env }}" ]; then
+            echo "Environment name is empty, setting to dev"
+            echo "::set-output name=env::dev"
           fi
           
       - name: Set Environment Name
