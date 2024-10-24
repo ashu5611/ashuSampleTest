@@ -42,16 +42,17 @@ jobs:
           else
             echo "::set-output name=env::${{ fromJSON('{ "develop":"qa", "main":"prod"}')[github.ref_name] }}"
           fi
-          if [ -z "${{ steps.get-env.outputs.env }}" ]; then
-            echo "Environment name is empty, setting to dev"
-            echo "::set-output name=env::dev"
-          fi
+          
       - name: Set Environment Name
         if: github.event_name == 'workflow_dispatch'
         run: |
           echo "::set-output name=env::${{ github.event.inputs.environment }}"
       - name: Print Environment Name
         run: |
+          if [ -z "${{ steps.get-env.outputs.env }}" ]; then
+            echo "Environment name is empty, setting to dev"
+            echo "::set-output name=env::dev"
+          fi
             echo "Environment to publish is :${{ steps.get-env.outputs.env }}"
   publish-oas-job:
     name: "Publish Api"
