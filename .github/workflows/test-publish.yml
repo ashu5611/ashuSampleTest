@@ -42,7 +42,7 @@ jobs:
           else
             echo "::set-output name=env::${{ fromJSON('{ "develop":"qa", "main":"prod"}')[github.ref_name] }}"
           fi
-          if [ -z "$env" ]; then
+          if [ -z "${env}" ]; then
             echo "No env is selected, falling to default"
             echo "::set-output name=env::dev"
           fi
