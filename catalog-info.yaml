@@ -1,0 +1,13 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ashu-sampl-test
+  title: Ashu Test
+  description: This is the sample repo
+  annotations:
+    backstage.io/edit-url: https://github.com/ashu5611/ashuSampleTest
+    backstage.io/techdocs-ref: dir:.
+spec:
+  type: Documentation
+  lifecycle: experimental
+  owner: dp.apim.team
