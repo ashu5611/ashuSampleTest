@@ -2,9 +2,9 @@ name: Publish OAS to API Catalog
 on:
   push:
     branches:
-      - develop
-      - feature/*
       - main
+    paths:
+      - openapi/apiSpec.yaml
     
   workflow_dispatch:
     inputs:
