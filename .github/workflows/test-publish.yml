@@ -4,7 +4,7 @@ on:
     branches:
       - main
     paths:
-      - openapi/apiSpec.yaml
+      - openapi/apispec.yaml
     
   workflow_dispatch:
     inputs:
